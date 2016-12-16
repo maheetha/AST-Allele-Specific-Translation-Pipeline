@@ -72,7 +72,10 @@ This program has many mandatory and optional arguments:
         
 
 Example Usage:
-bash AST_mapping_workflow.sh -w /wasp/directory -n basename -i /path/to/hg19 -s /path/to/snp/directory -p -a fastq1 -b fastq2
+
+         bash AST_mapping_workflow.sh -w /wasp/directory -n basename -i /path/to/hg19 -s /path/to/snp/directory -p -a fastq1 -b fastq2
+
+
 
 
 Working with Starter Position Files 
@@ -85,55 +88,55 @@ Both the pileup file and the snps file should be for ONE chromosome.
 
 The pileup file should be in this format:
 
-CHR	POS	SNP	COUNT	ALLELE	QUALITY
+        CHR	POS	SNP	COUNT	ALLELE	QUALITY
 
-chr1	12345	N	1	C	I
+        chr1	12345	N	1	C	I
 
-chr1	12346	N	1	A	I
+        chr1	12346	N	1	A	I
 
-chr1	12347	N	1	A	F
+        chr1	12347	N	1	A	F
 
-chr1	12348	N	1	C	H
+        chr1	12348	N	1	C	H
 
 
 The format of the pileup file above should be the result of the samtools command in the last two lines of the AST_workflow script. The positions in the pileup up file should be in order, and samtools should automatically do this. If not, please sort the pileup file. In addition, please make sure that you have gotten rid of reads that do not match the quality you need. This should also be taken care of by the samtools mpileup command, where you can specify mapping and minimum base pair quality. 
 
 The snp files you’ve created from extract_vcf_snps.sh should look like this:
 
-10177	A	AC	1|0
+      10177	A	AC	1|0
 
-10352	T	TA	0|1
+      10352	T	TA	0|1
 
-13273	G	C	1|0
+      13273	G	C	1|0
 
-14464	A	T,G	0|1
+      14464	A	T,G	0|1
 
 
 The fourth column is essential to help us keep track of the haplotype. The starter_positions_file.py program will take alleles that are SNPs, but no insertions and deletions. This program will also take multiple alleles, up to three (the max). 
 
-Usage
+Example Usage:
 
 NOTE: please use full paths for everything that is not in the directory where you're running the program. For directories, do not put a "/" at the end
 
-python starter_position_file.py --pileup_file pileup --snp_file snp --read_length 75 --unit chr1 --min_reads 20 --output_dir out_dir
+    python starter_position_file.py --pileup_file pileup --snp_file snp --read_length 75 --unit chr1 --min_reads 20 --output_dir out_dir
 
-OUTPUT
+OUTPUT:
 
-POS	REF	ALT	REF_COUNT	ALT_1_COUNT	ALT_2_COUNT	ALT_3_COUNT	HAP
+      POS	REF	ALT	REF_COUNT	ALT_1_COUNT	ALT_2_COUNT	ALT_3_COUNT	HAP
 
-22418721	G	A	1	2	0	0	0|1
+      22418721	G	A	1	2	0	0	0|1
 
-22418720	G	A	0	0	0	0	0|1
+      22418720	G	A	0	0	0	0	0|1
 
-22418719	G	A	0	0	0	0	0|1
+      22418719	G	A	0	0	0	0	0|1
 
-22418718	G	A	1	0	0	0	0|1
+      22418718	G	A	1	0	0	0	0|1
 
-22418717	G	A	0	0	0	0	0|1
+      22418717	G	A	0	0	0	0	0|1
 
-22418716	G	A	0	0	0	0	0|1
+      22418716	G	A	0	0	0	0	0|1
 
-22418715	G	A	1	0	0	0	0|1
+      22418715	G	A	1	0	0	0	0|1
 
 
 The output looks like this. With position, reference and alternative allele(s), and the haplotype. 
@@ -156,11 +159,11 @@ find_intersecting_snps.py:
 
 1.	line 510 added
 	
-	for y in range(len(ref_alleles)):
+	    for y in range(len(ref_alleles)):
         	item = ref_alleles[y].decode("utf-8")
         	ref_alleles[y] = item
 
-    	for z in range(len(alt_alleles)):
+    	    for z in range(len(alt_alleles)):
         	item = alt_alleles[z].decode("utf-8")
         	alt_alleles[z] = item
 
@@ -168,35 +171,40 @@ find_intersecting_snps.py:
 2.	line 510 of original has become line 518
 	line 518 and 519 have been modified
 
-	 ref_read = read_seq[:idx] + ref_alleles[i].decode("utf-8") + read_seq[idx+1:]
-   	 alt_read = read_seq[:idx] + alt_alleles[i].decode("utf-8") + read_seq[idx+1:]
+	     ref_read = read_seq[:idx] + ref_alleles[i].decode("utf-8") + read_seq[idx+1:]
+   	     alt_read = read_seq[:idx] + alt_alleles[i].decode("utf-8") + read_seq[idx+1:]
 
 3. 	line 559 & 561 in original has been modified to
-	fastq_file1.write(bytes("@%s\n%s\n+%s\n%s\n" %
+
+             fastq_file1.write(bytes("@%s\n%s\n+%s\n%s\n" %
                           (name, pair[0], name, orig_read1.qual) ,'UTF-8'))
 
 
-       	 fastq_file2.write(bytes("@%s\n%s\n+%s\n%s\n" %
+       	     fastq_file2.write(bytes("@%s\n%s\n+%s\n%s\n" %
                           (name, rev_seq, name, orig_read2.qual), 'UTF-8'))
 
 4. 	after line 818 in the original we added
-	ref_alleles = ref_alleles.decode('UTF-8')
+        
+	     ref_alleles = ref_alleles.decode('UTF-8')
 	
 	after line 819 in original we added
-	alt_alleles = alt.alleles.decode('UTF-8')
+	      
+	      alt_alleles = alt.alleles.decode('UTF-8')
 
 
 snp_table.py:
 
 1. 	around lines 180 these two lines were added:
-	allele2 = allele2.decode('UTF-8')
-       	 allele1 = allele1.decode('UTF-8')
+	      
+	      allele2 = allele2.decode('UTF-8')
+       	      allele1 = allele1.decode('UTF-8')
 
 
 util.py
 
 1. 	line 14 was modified to
-	DNA_COMP = str.maketrans("ATCGMRWSYKNatcgmrwsykn",
+	
+	      DNA_COMP = str.maketrans("ATCGMRWSYKNatcgmrwsykn",
                                     "TAGCKYWSRMNtagckywsrmn")
 
 extract_vcfs_snp.sh
