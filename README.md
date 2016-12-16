@@ -1,5 +1,15 @@
 # AST-Allele-Specific-Translation-Pipeline
 
+Scripts borrowed and modified from WASP:
+
+filter_remapped_reads.py
+find_intersecting_snps.py
+rmdup_pe.py
+rmdup.py
+util.py
+snptable.py
+extract_vcf_snps.sh
+
 
 Pipeline for Allele Specific Translation Using Ribosome Profiling
 
