@@ -86,29 +86,28 @@ Both the pileup file and the snps file should be for ONE chromosome.
 The pileup file should be in this format:
 
 CHR	POS	SNP	COUNT	ALLELE	QUALITY
+
 chr1	12345	N	1	C	I
+
 chr1	12346	N	1	A	I
+
 chr1	12347	N	1	A	F
+
 chr1	12348	N	1	C	H
-chr1	12349	N	1	C	@
-chr1	12350	N	1	T	G
+
 
 The format of the pileup file above should be the result of the samtools command in the last two lines of the AST_workflow script. The positions in the pileup up file should be in order, and samtools should automatically do this. If not, please sort the pileup file. In addition, please make sure that you have gotten rid of reads that do not match the quality you need. This should also be taken care of by the samtools mpileup command, where you can specify mapping and minimum base pair quality. 
 
 The snp files you’ve created from extract_vcf_snps.sh should look like this:
 
 10177	A	AC	1|0
+
 10352	T	TA	0|1
+
 13273	G	C	1|0
-14464	A	T	0|1
-14930	A	G	0|1
-14933	G	A	0|1
-15211	T	G	0|1
-15274	A	G,T	1|2
-15820	G	T	0|1
-15903	G	GC	1|0
-54490	G	A	0|1
-54712	T	TTTTC	0|1
+
+14464	A	T,G	0|1
+
 
 The fourth column is essential to help us keep track of the haplotype. The starter_positions_file.py program will take alleles that are SNPs, but no insertions and deletions. This program will also take multiple alleles, up to three (the max). 
 
@@ -120,17 +119,22 @@ python starter_position_file.py --pileup_file pileup --snp_file snp --read_lengt
 
 OUTPUT
 
-POS	REF	ALT	REF_COUNT	ALT_1_COUNT	ALT_2_COUNT	ALT_3_COUNT	HAP	
+POS	REF	ALT	REF_COUNT	ALT_1_COUNT	ALT_2_COUNT	ALT_3_COUNT	HAP
+
 22418721	G	A	1	2	0	0	0|1
+
 22418720	G	A	0	0	0	0	0|1
+
 22418719	G	A	0	0	0	0	0|1
+
 22418718	G	A	1	0	0	0	0|1
+
 22418717	G	A	0	0	0	0	0|1
+
 22418716	G	A	0	0	0	0	0|1
+
 22418715	G	A	1	0	0	0	0|1
-22418714	G	A	2	1	0	0	0|1
-22418713	G	A	0	2	0	0	0|1
-22418712	G	A	3	9	0	0	0|1
+
 
 The output looks like this. With position, reference and alternative allele(s), and the haplotype. 
 
