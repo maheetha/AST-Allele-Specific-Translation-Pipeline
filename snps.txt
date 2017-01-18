@@ -1,0 +1,5 @@
+POS	REF	ALT
+1	T	C
+10	C	G
+12	G	T
+
